@@ -1,0 +1,68 @@
+//暴力法
+
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        int i,j;
+        for (i=0;i<nums.size()-1;i++)
+        {
+            for(j=i+1;j<nums.size();j++)
+            {
+                if(nums[i]+nums[j]==target)
+                {
+                    return{i,j};
+                }
+            }
+        }
+        return {i,j};
+    };
+};
+
+//两遍哈希表
+//哈希表，根据关键码值而直接进行访问的数据结构
+//map，STL中的关联容器，提供一度以的数据处理能力key-value
+//value_type 插入数据
+//map.count() 返回被查找元素的个数，如果有则返回1，没有则返回0
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        map<int,int> a;//建立hash表存放数组元素
+        vector<int> b(2,-1);//存放结果 创建一个vector b 有2个元素，均为-1
+        for(int i=0;i<nums.size();i++)
+            a.insert(map<int,int>::value_type(nums[i],i));
+        for(int i=0;i<nums.size();i++)
+        {
+            if(a.count(target-nums[i])>0&&(a[target-nums[i]]!=i))
+            //判断是否找到目标元素且目标元素不能是本身
+            {
+                b[0]=i;
+                b[1]=a[target-nums[i]];
+                break;
+            }
+        }
+        return b;
+    };
+};
+
+//一遍哈希
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        map<int,int> a;//提供一对一的hash
+        vector<int> b(2,-1);//用来承载结果，初始化一个大小为2，值为-1的容器b
+        for(int i=0;i<nums.size();i++)
+        {
+            if(a.count(target-nums[i])>0)
+            {
+                b[0]=a[target-nums[i]];
+                b[1]=i;
+                break;
+            }
+            a[nums[i]]=i;//反过来放入map中，用来获取结果下标
+        }
+        return b;
+    };
+};
+
+summary：
+哈希表，stl中的map,vector及相关api
