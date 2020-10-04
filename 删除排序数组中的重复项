@@ -1,13 +1,12 @@
-public int removeDuplicates(int[] nums) {
-    if (nums.length == 0) return 0;
-    int i = 0;
-    for (int j = 1; j < nums.length; j++) {
-        if (nums[j] != nums[i]) {
-            i++;
-            nums[i] = nums[j];
-        }
+class Solution {
+public:
+    int removeDuplicates(vector<int>& nums) {
+    if (nums.size() < 2) return nums.size();
+	int j = 0;
+	for (int i = 1; i < nums.size(); i++)
+		if (nums[j] != nums[i]) nums[++j] = nums[i];
+	return ++j;
     }
-    return i + 1;
-}
-//数组是有序的，其实就是将不重复的元素移到数组左侧。用双指针完成
+};
+//题目给定数组是有序的，其实就是将不重复的元素移到数组左侧。用双指针完成
 //优化： q-p>1 时，才进行复制
