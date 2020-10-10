@@ -1,0 +1,42 @@
+
+//第一次想出的暴力代码，有点傻逼
+class Solution {
+public:
+    int searchInsert(vector<int>& nums, int target) {
+        int j;
+        for(int i=0;i<nums.size();i++){
+            if(target==nums[i]){
+                return i;
+                break;
+            }
+            if(target>nums[i]){
+                j++;
+            }     
+        }
+        return j;
+        }
+
+};
+
+
+//二分查找
+假设题意是叫你在排序数组中寻找是否存在一个目标值，那么训练有素的读者肯定立马就能想到利用二分法在 O(\log n)O(logn) 的时间内找到是否存在目标值。
+
+class Solution {
+public:
+    int searchInsert(vector<int>& nums, int target) {
+        int n = nums.size();
+        int left = 0, right = n - 1, ans = n;
+        while (left <= right) {
+            int mid = ((right - left) >> 1) + left;
+            if (target <= nums[mid]) {
+                ans = mid;
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return ans;
+    }
+};
+
