@@ -1,0 +1,63 @@
+//动态规划
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {
+        int pre = 0, maxAns = nums[0];
+        for (const auto &x: nums) {
+            pre = max(pre + x, x);
+            maxAns = max(maxAns, pre);
+        }
+        return maxAns;
+    }
+};
+
+//贪心：若当前指针所指元素之前的和小于0，则丢弃当前元素之前的数列
+
+//分治：
+我们定义一个操作get(a,l,r)表示查询 a 序列 [l, r][l,r] 区间内的最大子段和，那么最终我们要求的答案就是get(nums,0,nums.size()-1).
+如何分治实现这个操作呢？对于一个区间 [l, r],对区间 [l, m] 和 [m + 1, r] 分治求解.当递归逐层深入直到区间长度缩小为 11 的时候，递归开始回升
+对于一个区间 [l, r][l,r]，我们可以维护四个量：
+
+lSum 表示 [l, r]内以 ll 为左端点的最大子段和
+rSum 表示 [l, r]内以 rr 为右端点的最大子段和
+mSum 表示 [l, r]内的最大子段和
+iSum 表示 [l, r]的区间和
+
+isum即左子区间和右子区间的isum之和
+对于lsum，存在两种可能，要么等于左子区间的lsum，要么等于左子区间的isum加上右子区间的lsum
+对于rsum，同理，要么等于右子区间的rsum，要么等于右子区间的isum加上左子区间的rsum
+对于mSum，可能是左子区间的msum和右子区间的msum，也有可能是左子区间的rsum和右子区间的lsum
+
+class Solution {
+public:
+    struct Status {
+        int lSum, rSum, mSum, iSum;
+    };
+
+    Status pushUp(Status l, Status r) {
+        int iSum = l.iSum + r.iSum;
+        int lSum = max(l.lSum, l.iSum + r.lSum);
+        int rSum = max(r.rSum, r.iSum + l.rSum);
+        int mSum = max(max(l.mSum, r.mSum), l.rSum + r.lSum);
+        return (Status) {lSum, rSum, mSum, iSum};
+    };
+
+    Status get(vector<int> &a, int l, int r) {
+        if (l == r) {
+            return (Status) {a[l], a[l], a[l], a[l]};
+        }
+        int m = (l + r) >> 1;
+        Status lSub = get(a, l, m);
+        Status rSub = get(a, m + 1, r);
+        return pushUp(lSub, rSub);
+    }
+
+    int maxSubArray(vector<int>& nums) {
+        return get(nums, 0, nums.size() - 1).mSum;
+    }
+};
+
+
+
+
+
